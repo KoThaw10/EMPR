@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="attendance.css">
+    <title>Attendance</title>
+</head>
+
+<body>
+    <section id="attendance">
+        <main>
+            <div class="container">
+                <div class="table-wrapper">
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h1>Attendance Details</h1>
+                                <ul class="breadcrumb">
+                                    <li>
+                                        <a href="/attendance">Attendance</a>
+                                    </li>
+                                    <li><i class='bx bx-chevron-right'></i></li>
+                                    <li>
+                                        <a class="active" href="/dashboard">Home</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="import" onclick="importData()">Import Data</button>
+                                <input class="input" type="file" id="fileInput" accept=".xlsx"><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                    <input type="text" id="nameSearch" placeholder="Search by Name" oninput="searchData()">
+                    </div>
+                    <div class="search-options">
+                        <!-- Monthly and Annual search dropdowns -->
+                        <select id="monthSelector">
+                            <option value="">Select Month</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+
+                        <select id="yearSelector">
+                            <option value="">Select Year</option>
+                            <option value="2023">2021</option>
+                            <option value="2024">2022</option>
+                            <option value="2025">2023</option>
+                            <!-- Add more years as needed -->
+                        </select>
+
+                        <!-- Combined search button -->
+                        <button onclick="searchData()">Search</button>
+                    </div>
+                    <table class="table" id="attendance" style="font-size: x-small;">
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Employee Name</th>
+                                <th>Casual Leave</th>
+                                <th>Medical Leave</th>
+                                <th>Maternity Leave</th>
+                                <th>Marriage Leave</th>
+                                <th>Value of Casual Leave</th>
+                                <th>Value of Medical Leave</th>
+                                <th>Value of Maternity Leave</th>
+                                <th>Value of Marriage Leave</th>
+                                <th>Attendance</th>
+                                <th>Total Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table rows will be added dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
+    <script>
+        let importedData = [];
+
+        function importData() {
+            const fileInput = document.getElementById("fileInput");
+            const attendanceTable = document.getElementById("attendance");
+
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: "array" });
+
+                    // Assuming the first sheet in the Excel file contains the data.
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+
+                    // Convert the sheet data to an array of objects.
+                    importedData = XLSX.utils.sheet_to_json(sheet);
+
+                    // Clear the existing table body.
+                    attendanceTable.getElementsByTagName("tbody")[0].innerHTML = "";
+
+                    // Create a new table body and populate it with the data from the Excel file.
+                    const tbody = attendanceTable.getElementsByTagName("tbody")[0];
+                    importedData.forEach(item => {
+                        const row = document.createElement("tr");
+                        for (const key in item) {
+                            const cell = document.createElement("td");
+                            cell.textContent = item[key];
+                            row.appendChild(cell);
+                        }
+                        const deleteCell = document.createElement("td");
+                        const deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.onclick = function () {
+                            deleteRow(row);
+                        };
+                        deleteCell.appendChild(deleteButton);
+                        row.appendChild(deleteCell);
+                        tbody.appendChild(row);
+                    });
+
+                    // Update the table when data is imported
+                    searchData();
+                };
+
+                reader.readAsArrayBuffer(file);
+            }
+        }
+
+        function deleteRow(row) {
+            importedData = importedData.filter(item => item !== importedData[row.rowIndex - 1]);
+            row.parentNode.removeChild(row);
+        }
+
+        function searchData() {
+            const selectedMonth = document.getElementById("monthSelector").value;
+            const selectedYear = document.getElementById("yearSelector").value;
+            const nameToSearch = document.getElementById("nameSearch").value.toLowerCase();
+
+            const tbody = document.getElementById("attendance").getElementsByTagName("tbody")[0];
+            const rows = tbody.getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const columns = row.getElementsByTagName("td");
+                const attendanceDate = columns[10].textContent;
+                const yearPart = attendanceDate.substring(0, 4);
+                const monthPart = attendanceDate.substring(5, 7);
+                const employeeName = columns[1].textContent.toLowerCase();
+
+                const isNameMatch = nameToSearch === "" || employeeName.includes(nameToSearch);
+                const isMonthMatch = selectedMonth === "" || monthPart === selectedMonth;
+                const isYearMatch = selectedYear === "" || yearPart === selectedYear;
+
+                if (isNameMatch && isMonthMatch && isYearMatch) {
+                    row.style.display = "table-row";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

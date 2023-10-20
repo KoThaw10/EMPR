@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
+
+    <title>Home</title>
+</head>
+
+<body>
+
+
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="/dashboard" class="brand">
+            <i class='bx bx-calculator'></i>
+            <span class="text">Payroll System</span>
+        </a>
+        <ul class="side-menu top">
+            <li class="active">
+                <a href="/dashboard" target="content">
+                    <i class="fas fa-comments"> </i>
+                    <span class="text"> Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/employee" target="content">
+                    <i class="fas fa-user"> </i>
+                    <span class="text"> Employee</span>
+                </a>
+            </li>
+            <li>
+                <a href="/attendance" target="content">
+                    <i class="fas fa-calendar-check"> </i>
+                    <span class="text"> Attendance</span>
+                </a>
+            </li>
+            <li>
+                <a href="salary.html" target="content">
+                    <i class="fas fa-file-invoice-dollar"> </i>
+                    <span class="text"> Salary Record</span>
+                </a>
+            </li>
+            <li>
+                <a href="admin.html" target="content">
+                    <i class="fas fa-user"> </i>
+                    <span class="text"> Admin Accounts</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <!-- Menu toggle -->
+            <i class='bx bx-menu'></i>
+            <!-- Search bar -->
+            <a href="#" class="nav-link"></a>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+
+            <!-- light/dark switch mode -->
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+
+            <!-- Admin Profile -->
+            <a href="#" class="account-info-link">
+                &#128100; <%= user.full_name%> </a>
+            <!-- Edit Admin Profile -->
+            <button class="edit-button" id="">
+                    <i class="fas fa-user-edit"></i>
+            </button>
+            <!-- logout button -->
+            <button class="logout-button" id="logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </nav>
+    </section>
+        
+    <section id="content">
+        <div id="main">
+            <iframe name="content" src="/dashboard" frameborder="0"></iframe>
+        </div>
+    </section>
+    <!-- CONTENT -->
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
+
+

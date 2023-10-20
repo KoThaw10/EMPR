@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="employee.css">
+    <title>Employee</title>
+</head>
+
+<body>
+    <section id="employee">
+        <main>
+            <div class="container">
+                <div class="table-wrapper">
+                  <div class="table-title">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <h1>Employee Details</h1>
+                        <!-- <ul class="breadcrumb">
+                          <li>
+                              <a href="employee.html">Employee</a>
+                           </li>
+                          <li><i class='bx bx-chevron-right'></i></li>
+                          <li>
+                              <a class="active" href="dashboard.html">Home</a>
+                          </li>
+                      </ul> -->
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-input">
+                          <input type="search" placeholder="Search...">
+                          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                        </div>
+                        <button data-modal-target="#modal1" type="button" class="btn btn-info add-new">
+                          <i class="fa fa-plus"></i> Add New 
+                        </button>
+                        
+                      </div>
+                    </div>
+                  </div>
+               
+                  <div>
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Gender</th>
+                          <th>Address</th>
+                          <th>Position</th>
+                          <th>Department</th>
+                          <th>DOB</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>Actions</th>
+                          <th>Pay Salary</th>
+                    
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        <% empData.forEach(employee => { %>
+                        <tr>
+                          <td><%= employee.id %></td>
+                          <td><%= employee.name %></td>
+                          <td><%= employee.gender %></td>
+                          <td><%= employee.address %></td>
+                          <td><%= employee.position %></td>
+                          <td><%= employee.department %></td>
+                          <td><%= employee.dob%></td>
+                          <td><%= employee.email %></td>
+                          <td><%= employee.phone %></td>
+                          <td>        
+                              <a data-modal-target="#modal2" id="editLink"  class="edit" title="Edit"><i class="fas fa-edit"></i>
+                              </a>
+                              <a id="deleteLink" class="delete" data-employee-id="<%= employee.id %>" title="Delete"><i class="fas fa-trash"></i>
+                              </a>
+                          </td>
+                          <td>
+                            <button data-modal-target="#modal3" id="payButton" type="paybutton" class="btn btn-info">Pay</button>
+                          </td>
+                        </tr>
+
+                      <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                </div>
+              </div>
+        </main>
+        <!-- MAIN -->
+
+        <!-- Add New Button -->
+        <!-- Add pop up box -->
+        <div class="modal-edit" id="modal1">
+          <div class="modal-header">
+            <div class="title">Add Employee</div>
+            <button data-close-button class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form id="employeeForm">
+              <div class="formGroup">
+                <label for="employeeID">Employee ID:</label>
+                <input type="text" id="employee_id" name="employee_id" placeholder="Valid Employee ID" required>
+              </div>
+
+              <div class="formGroup">
+                  <label for="employeeName">Employee Name:</label>
+                  <input type="text" id="employee_name" name="employee_name" placeholder="Employee Full Name" required>
+              </div>
+
+              <div class="formGroup">
+                <label for="employeeGender">Gender:</label>
+                <input type="text" id="gender" name="gender" placeholder="Employee Gender" required>
+              </div>
+
+              <div class="formGroup">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" placeholder="38 Wards, N/Dagon..." required>
+              </div>
+
+              <div class="formGroup">
+                  <label for="position">Position:</label>
+                  <input type="text" id="position" name="position" placeholder="Employee Position" required>
+              </div>
+  
+              <div class="formGroup">
+                  <label for="employeeDep">Department:</label>
+                  <input type="text" id="department_id" name="department_id" placeholder="Employee Department" required>
+              </div>
+  
+              <div class="formGroup">
+                  <label for="date_of_birth">Date of Birth:</label>
+                  <input type="date" id="date_of_birth" name="date_of_birth" placeholder="Employee Date of Birth" required>
+              </div>
+  
+  
+              <div class="formGroup">
+                  <label for="email">Email:</label>
+                  <input type="email" id="email" name="email" placeholder="admin@gmail.com" required>
+              </div>
+
+              <div class="formGroup">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" placeholder="+95 9..." required>
+            </div>
+
+              <div class="formGroup">
+                <label for="image">Profile Image:</label>
+                <input type="file" id="image" name="image"accept=".png">
+              </div>
+  
+              <div class="formGroup">
+                  <button type="submit" id="addSubmitButton">Confirm</button>
+                  <button type="button" data-close-button id="cancelButton">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="overlay"></div>
+        <!-- End of add pop up box -->
+        <!-- End of Add BUTTON  -->
+
+        <!-- EDIT Button -->
+        <!-- edit pop up box -->
+        <div class="modal-edit" id="modal2">
+          <div class="modal-header">
+            <div class="title">Manage Employee</div>
+            <button data-close-button class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form id="employeeForm">
+              <div class="formGroup">
+                <label for="employeeID">Employee ID:</label>
+                <input type="text" id="edit_employee_id" name="employee_id" placeholder="Valid Employee ID" required>
+              </div>
+
+              <div class="formGroup">
+                  <label for="employeeName">Employee Name:</label>
+                  <input type="text" id="edit_employee_name" name="employee_name" placeholder="Employee Full Name" required>
+              </div>
+
+              <div class="formGroup">
+                <label for="employeeGender">Gender:</label>
+                <input type="text" id="edit_gender" name="gender" placeholder="Employee Gender" required>
+              </div>
+
+              <div class="formGroup">
+                <label for="address">Address:</label>
+                <input type="text" id="edit_address" name="address" placeholder="38 Wards, N/Dagon..." required>
+              </div>
+
+              <div class="formGroup">
+                  <label for="position">Position:</label>
+                  <input type="text" id="edit_position" name="position" placeholder="Employee Position" required>
+              </div>
+  
+              <div class="formGroup">
+                  <label for="employeeDep">Department:</label>
+                  <input type="text" id="edit_department_id" name="department_id" placeholder="Employee Department" required>
+              </div>
+  
+              <div class="formGroup">
+                  <label for="date_of_birth">Date of Birth:</label>
+                  <input type="date" id="edit_date_of_birth" name="date_of_birth" placeholder="Employee Date of Birth" required>
+              </div>
+  
+  
+              <div class="formGroup">
+                  <label for="email">Email:</label>
+                  <input type="email" id="edit_email" name="email" placeholder="admin@gmail.com" placeholder="Employee Valid Email" required>
+              </div>
+
+              <div class="formGroup">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="edit_phone" name="phone" placeholder="+95 9..." placeholder="Employee Valid Contact Number" required>
+            </div>
+
+              <div class="formGroup">
+                <label for="image">Profile Image:</label>
+                <input type="file" id="edit_image" name="image"accept=".png">
+              </div>
+  
+              <div class="formGroup">
+                  <button type="submit" id="editSubmitButton">Confirm</button>
+                  <button type="button" data-close-button id="cancelButton">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="overlay"></div>
+        <!-- end of edit pop up box -->
+        <!-- End of EDIT BUTTON -->
+        
+         <!-- PAY Button -->
+        <!-- pay pop up box -->
+        <div class="modal-edit" id="modal3">
+          <div class="modal-header">
+            <div class="title">Employee Paycheck</div>
+            <button data-close-button class="close-button">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form id="employeeForm">
+                <div class="formGroup">
+                  <h3>Employee Information</h3>
+                </div>
+
+                <div class="formGroup">
+                  <label for="employeeID">Employee ID:</label>
+                  <!-- <input type="text" id="employee_id" name="employee_id" required> -->
+                </div>
+  
+                <div class="formGroup">
+                    <label for="employeeName">Employee Name:</label>
+                    <!-- <input type="text" id="employee_name" name="employee_name" required> -->
+                </div>
+    
+                <div class="formGroup">
+                  <label for="position">Position:</label>
+                  <!-- <input type="text" id="position" name="position" required> -->
+                </div>
+  
+                <div class="formGroup">
+                  <label for="employeeDep">Department:</label>
+                  <!-- <input type="text" id="department_id" name="department_id" required> -->
+                </div>
+    
+                <div class="formGroup">
+                  <h3>Paycheck</h3>
+                </div>
+
+                <div class="formGroup">
+                  <label for="basicSalary"> Basic Salary:</label>
+                </div>
+    
+                <div class="formGroup">
+                    <label for="leave" id="#">Leave:</label>
+                </div>
+
+                <div class="formGroup">
+                  <label for="deduction" id="#">Deducted Amount:</label>
+              </div>
+    
+                <div class="formGroup">
+                    <label for="tax" id="#">Tax:</label>
+                </div>
+
+
+                <div class="formGroup">
+                  <h3>Total: </h3>
+                </div>
+              
+                <div class="formGroup">
+                  <button type="submit">Update</button>
+                  <button type="button" data-close-button id="cancelButton">Cancel</button>
+                </div>
+            </form>
+        </div>
+        </div>
+        <div id="overlay"></div>
+        <!-- end of pay pop up box -->
+        <!-- End of pay BUTTON -->
+
+    </section>
+
+
+
+    <script>
+        //Add and Edit Button
+        const openModalButtons = document.querySelectorAll('[data-modal-target]')
+        const closeModalButtons = document.querySelectorAll('[data-close-button]')
+        const overlay = document.getElementById('overlay')
+        // Get the submit button and form
+        const addSubmitButton = document.getElementById('addSubmitButton');
+        const editSubmitButton = document.getElementById('editSubmitButton')
+
+        openModalButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const modalTarget = button.getAttribute('data-modal-target')
+            const modal = document.querySelector(button.dataset.modalTarget)
+            if(modalTarget === "#modal1"){
+              displayModal1(modal)
+            }else if (modalTarget === "#modal2"){
+              displayModal2(button, modal)
+            }else if (modalTarget === "#modal3"){
+              displayModal3()
+            }
+          })
+        })
+
+        
+
+        
+        // Employee Delete button 
+        const deleteLink = document.querySelectorAll('#deleteLink');
+        deleteLink.forEach(button => {
+          button.addEventListener('click', () => {
+            const employeeId = button.getAttribute('data-employee-id');
+            swal({
+              title: "Delete Employee",
+              text: "Are you sure you want to delete this employee?",
+              icon: "warning",
+              buttons: ["Cancel", "Delete"],
+            })
+          .then((confirmed) => {
+              if (confirmed) {
+                  deleteEmp(employeeId)
+                  swal("Deleted!", "Employee has been deleted.", "success");
+                  
+              } else {
+                  swal("Cancelled", "Employee was not deleted.", "error");
+              }
+              setTimeout(refreshPage, 1000)
+            })
+          })
+        })
+
+        //Delete employee data
+        function deleteEmp(employee_Id){
+          fetch('/delEmployee', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 'employee_id': employee_Id }),
+          })
+          .then(response => {
+            if (response.ok) {
+              //alert('Employee record deleted successfully');
+              
+            } else {
+              alert('Error deleting employee record');
+            }
+          })
+          .catch(error => {
+            console.error('Network error:', error);
+          })
+        }
+
+        //Display add employee pop-up box
+        function displayModal1(modal){
+          openModal(modal)
+        }
+
+        //Display edit employee pop-up box
+        function displayModal2(button, modal){
+          const tableRow = button.closest('tr')
+            const fields = ['edit_employee_id','edit_employee_name', 'edit_gender', 'edit_address', 'edit_position', 'edit_department_id', 'edit_date_of_birth', 'edit_email', 'edit_phone'];
+            // Loop through the field names and set their corresponding values
+            var i = 0
+            fields.forEach(fieldName => {
+              const inputField = modal.querySelector(`#${fieldName}`);
+              if (inputField) {
+                  inputField.value = tableRow.cells[i].textContent
+                  i++
+              }
+          })
+            openModal(modal)
+            const id = document.getElementById('edit_employee_id').value
+        }
+
+
+        // Add a click event listener to the submit button
+        addSubmitButton.addEventListener('click', function(event) {
+          event.preventDefault() // Prevent the form from submitting
+
+          // Get the input values
+          const employee_id = document.getElementById('employee_id').value
+          const employee_name = document.getElementById('employee_name').value
+          const gender = document.getElementById('gender').value
+          const address = document.getElementById('address').value
+          const position = document.getElementById('position').value
+          const department = document.getElementById('department_id').value
+          const date_of_birth = document.getElementById('date_of_birth').value
+          const email = document.getElementById('email').value
+          const phone = document.getElementById('phone').value
+          //const image = document.getElementById('image').value 
+
+          //input data into object
+          const data = {
+            'employee_id': employee_id,
+            'employee_name': employee_name,
+            'gender': gender,
+            'address': address,
+            'position': position,
+            'department_id': department,
+            'date_of_birth': date_of_birth,
+            'email': email,
+            'phone': phone
+            //'image': image
+          }
+          
+          //send data to server
+          fetch('/addEmployee', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json' // Set the appropriate content type
+            },
+            body: JSON.stringify(data) // Convert the data to a JSON string
+          })
+          .then(response => {
+            if (response.ok) {
+              console.log('Data sent to the server successfully')
+              alert("add employee successfully");
+              refreshPage()
+            } else {
+              console.error('Error sending data to the server')
+            }
+          })
+          .catch(error => {
+            console.error("Network error")
+          })
+          refreshPage()
+        })
+
+        // Add a click event listener to the edit button
+        editSubmitButton.addEventListener('click', function(event) {
+          event.preventDefault()
+
+          // Get the value
+          const employee_id = document.getElementById('edit_employee_id').value
+          const employee_name = document.getElementById('edit_employee_name').value
+          const gender = document.getElementById('edit_gender').value
+          const address = document.getElementById('edit_address').value
+          const position = document.getElementById('edit_position').value
+          const department = document.getElementById('edit_department_id').value
+          const date_of_birth = document.getElementById('edit_date_of_birth').value
+          const email = document.getElementById('edit_email').value
+          const phone = document.getElementById('edit_phone').value
+          //const image = document.getElementById('image').value
+
+          //input data into object
+          const data = {
+            'employee_id': employee_id,
+            'employee_name': employee_name,
+            'gender': gender,
+            'address': address,
+            'position': position,
+            'department_id': department,
+            'date_of_birth': date_of_birth,
+            'email': email,
+            'phone': phone
+            //'image': image
+          }
+
+          //send data to server
+          fetch('/editEmployee', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json' // Set the appropriate content type
+            },
+            body: JSON.stringify(data) // Convert the data to a JSON string
+          })
+          .then(response => {
+            if (response.ok) {
+              console.log('Data sent to the server successfully')
+              alert("Edit employee successfully");
+              refreshPage()
+            } else {
+              console.error('Error sending data to the server')
+              alert('Error sending data to the server')
+            }
+          })
+          .catch(error => {
+            alert('Error: ' + error.sqlMessage);
+          })
+        })
+
+        overlay.addEventListener('click', () => {
+          const modals = document.querySelectorAll('.modal.active')
+          modals.forEach(modal => {
+            closeModal(modal)
+          })
+        })
+
+        closeModalButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const modal = button.closest('.modal-edit')
+            closeModal(modal)
+          })
+        })
+
+        function openModal(modal) {
+          if (modal == null) return
+          modal.classList.add('active')
+          overlay.classList.add('active')
+        }
+
+        function closeModal(modal) {
+          if (modal == null) return
+          modal.classList.remove('active')
+          overlay.classList.remove('active')
+        }
+
+        function refreshPage() {
+          location.reload(); // Reload the current page
+      }
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert@2"></script>
+
+
+</body>
+</html>

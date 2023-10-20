@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {            
+            display: flex;
+            justify-content: center;
+            height: 30vh;
+        }
+    
+        .left {
+            flex: 1; 
+            padding: 20px;
+        }
+    
+        .right {
+            flex: 1; 
+            padding: 20px; 
+            height: 500px;
+            background-image: url('remote-work-payment.png'); 
+            background-repeat: no-repeat;
+        }
+        
+        .content {
+            text-align: center;
+            padding: 80px;
+        }  
+        .card-header {
+            text-align: left;
+        }      
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1></h1>
+        <h1>Online Payroll Management System</h1>
+    </div>
+    <div class="container">
+        <div class="left">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-left">Sign In</h3>
+                </div>
+                <div class="card-body">
+                    <form id="loginForm" action="/login" method="post">
+                        <div class="form-group">
+                            <input placeholder="username or email" type="text" class="form-control" id="username" name="username" required>
+                        </div><br>
+                        <div class="form-group">
+                            <input placeholder="password" type="password" class="form-control" id="password" name="password" required>
+                        </div><br>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                    
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="right"></div>
+    </div>
+
+    <!-- <script>
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Perform authentication here (e.g., validate username and password)
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // For simplicity, assume a successful login with hardcoded values
+            if (username === 'user' && password === 'password') {
+                // Redirect to the dashboard page after a successful login
+                window.location.href = 'index.html';
+            } else {
+                alert('Invalid username or password. Please try again.');
+            }
+        });
+    </script> -->
+</body>
+</html>
