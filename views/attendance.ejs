@@ -115,23 +115,33 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                if (response.status === 200) {
-                    alert('Data imported successfully.');
-                } else {
-                    alert('Error importing data.');
-                }
+            .then(response => response.json())
+            .then(data => {
+                // Handle the data from the server and display
+                showData(data)
             })
             .catch(error => {
-                console.error('An error occurred:', error);
-                alert('Error importing data.');
+                console.error('Error:', error);
             });
             
         }
 
-        function deleteRow(row) {
-            importedData = importedData.filter(item => item !== importedData[row.rowIndex - 1]);
-            row.parentNode.removeChild(row);
+        function showData(data){
+            const attendanceTable = document.getElementById("attendance")
+            // Clear the existing table body.
+            attendanceTable.getElementsByTagName("tbody")[0].innerHTML = "";
+
+            // Create a new table body and populate it with the data from the Excel file.
+            const tbody = attendanceTable.getElementsByTagName("tbody")[0];
+            data.data.forEach(item => {
+                const row = document.createElement("tr");
+                for (const key in item) {
+                    const cell = document.createElement("td");
+                    cell.textContent = item[key];
+                    row.appendChild(cell);
+                }
+                tbody.appendChild(row);
+            });
         }
 
         function searchData() {

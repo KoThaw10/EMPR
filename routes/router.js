@@ -149,7 +149,12 @@ router.post('/upload', upload.single('excelFile'), (req, res) => {
     const sheet = workbook.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json(sheet);
 
-    insertAttendance(data)
-});
+    const result = insertAttendance(data)
+    if(result){
+        res.status(200).json({ data: data });
+    }else{
+        res.status(500).json({ derror: 'Failed to process data.' });
+    }
+})
 
 module.exports = router

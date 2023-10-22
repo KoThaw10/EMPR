@@ -161,16 +161,16 @@ async function insertAttendance(data){
     row['month'],
     row['year']
   ])
-  console.log(values)
+
   await pool.query(insertQuery, [values], (err, results) => {
       if (err) {
           console.error('Error inserting data into the database: ' + err.message);
-          return res.status(500).send('Error inserting data into the database.');
+          return { success: false }
+      }else{
+        console.log("Insert complete")
+        return { success: true };
       }
-
-      console.log('Data inserted into the database');
-      res.send('Data inserted into the database');
-  });
+  })
 }
 
 
