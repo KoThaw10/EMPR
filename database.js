@@ -142,6 +142,37 @@ async function editEmployee(employeeData) {
 }
 
 
+async function insertAttendance(data){
+  // Insert data into MySQL database
+  const insertQuery = 'INSERT INTO attendance ( employee_id, employee_name, casual_leave, medical_leave, marriage_leave, maternity_leave, valance_casual_leave, valance_medical_leave, valance_marriage_leave, valance_maternity_leave, attendance, total_attendance, month, year) VALUES ?';
+  const values = data.map(row => [
+    row['Employee_id'],
+    row['Employee_name'],
+    row['Casual Leave'],
+    row['Medical Leave'],
+    row['Maternity Leave'],
+    row['Marriage Leave'],
+    row['balance of casual leave'],
+    row['balance of medical leave'],
+    row['balance of maternity leave'],
+    row['balance of marriage leave'],
+    row['attendance'],
+    row['total_attendance'],
+    row['month'],
+    row['year']
+  ])
+  console.log(values)
+  await pool.query(insertQuery, [values], (err, results) => {
+      if (err) {
+          console.error('Error inserting data into the database: ' + err.message);
+          return res.status(500).send('Error inserting data into the database.');
+      }
+
+      console.log('Data inserted into the database');
+      res.send('Data inserted into the database');
+  });
+}
+
 
 module.exports = {
     getData,
@@ -150,5 +181,6 @@ module.exports = {
     getDepName,
     addEmployee,
     delEmployee,
-    editEmployee
+    editEmployee,
+    insertAttendance
 }

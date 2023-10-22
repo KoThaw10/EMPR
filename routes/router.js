@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const { format } = require('date-fns');
-const { getData, getEmp, getDep, getDepName, addEmployee, delEmployee, editEmployee } = require('../database')
+const { getData, getEmp, getDep, getDepName, addEmployee, delEmployee, editEmployee, insertAttendance } = require('../database')
+const multer = require('multer')
+const XLSX = require('xlsx')
 var user =[]
 
 router.post('/login', async (req, res) => {
@@ -131,5 +133,23 @@ router.post('/editEmployee', async (req, res) => {
     res.status(500).send('Error updating employee data');
   }
 })
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
+
+router.post('/upload', upload.single('excelFile'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+
+    const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const data = XLSX.utils.sheet_to_json(sheet);
+
+    insertAttendance(data)
+});
 
 module.exports = router
