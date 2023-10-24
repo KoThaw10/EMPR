@@ -120,6 +120,7 @@ async function editEmployee(employeeData) {
     const departmentId = departmentResult[0].department_id
     employeeData.department_id = departmentId
 
+    //Update employee data
     const employee_id = employeeData.employee_id
     const query = `
     UPDATE employee
@@ -173,6 +174,51 @@ async function insertAttendance(data){
   })
 }
 
+async function updateAcc(acc, accountID){
+  const query = `
+    UPDATE account
+    SET ?
+    WHERE acc_id = ?
+    `
+    const params = [acc, accountID]
+
+    const [results, fields] = await pool.query(query, params)
+    console.log(results)
+
+}
+
+async function addAdmin(acc){
+  try {
+    const query = `
+    INSERT INTO account 
+    SET ?
+  `
+  const params = [acc]
+
+  const [results, fields] = await pool.query(query, params)
+  return results
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function delAccount(acc_id){
+  try {
+    // Delete the account based on the account id
+    const query = 'DELETE FROM account WHERE acc_id = ?'
+    const params = [acc_id]
+
+    const [results, fields] = await pool.query(query, params)
+
+    if (results.affectedRows === 1) {
+      return 'Account record deleted successfully'
+    } else {
+      return 'Account not found'
+    }
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
     getData,
@@ -182,5 +228,8 @@ module.exports = {
     addEmployee,
     delEmployee,
     editEmployee,
-    insertAttendance
+    insertAttendance,
+    updateAcc,
+    addAdmin,
+    delAccount
 }

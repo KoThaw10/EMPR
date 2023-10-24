@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const { format } = require('date-fns');
-const { getData, getEmp, getDep, getDepName, addEmployee, delEmployee, editEmployee, insertAttendance } = require('../database')
+const { getData, getEmp, getDep, getDepName, addEmployee, delEmployee, editEmployee, insertAttendance, updateAcc, addAdmin, delAccount } = require('../database')
 const multer = require('multer')
-const XLSX = require('xlsx')
+const XLSX = require('xlsx');
+const { ro } = require('date-fns/locale');
 var user =[]
 
 router.post('/login', async (req, res) => {
@@ -153,8 +154,70 @@ router.post('/upload', upload.single('excelFile'), (req, res) => {
     if(result){
         res.status(200).json({ data: data });
     }else{
-        res.status(500).json({ derror: 'Failed to process data.' });
+        res.status(500).json({ error: 'Failed to process data.' });
     }
+})
+
+
+router.get('/admin', async(req, res) => {
+    account = await getData()
+    res.render('admin', {'account': account})
+})
+
+router.get('/admin/:id', async (req, res) => {
+    const accountIdToSearch = req.params.id;
+    accountData = await getData()
+    // Assuming accountData is an array of account objects
+    const account = accountData.find(acc => acc.acc_id == accountIdToSearch);
+    if (account) {
+        // Account with the specified ID was found
+        console.log('Found account:', account);
+        res.status(200).json({'account': account})
+        // You can send this account data as a response to the client or perform further operations.
+    } else {
+        // Account with the specified ID was not found
+        console.log('Account not found');
+        res.status(500).json({error: 'Account not found'})
+        // You can send an appropriate response to the client, such as a 404 Not Found.
+    }
+})
+
+router.post('/editAdmin/:id', async (req, res) => {
+    console.log("enter server")
+    const accountId = parseInt(req.params.id);
+    const acc = req.body
+    try{
+        updateAcc(acc, accountId)
+        console.log('complete')
+        res.status(200).send("Update admin account successfully")
+    }catch{
+        console.log("error")
+        res.status(500).send("Error in updating admin")
+    }
+})
+
+router.post('/addAdmin', async (req, res) => {
+    const acc = req.body
+    try{
+        const result = addAdmin(acc)
+        res.status(200).send("Account added successfully")
+    }catch{
+        console.log(result)
+        res.status(500).send("Error in adding account")
+    }
+})
+
+router.post('/delAcc', async (req, res) => {
+    try{
+        const acc_id = req.body;
+        const result = await delAccount(acc_id.acc_id)
+        console.log(result)
+        res.status(200).send('Account record deleted successfully')
+    } catch (error) {
+        console.error('Error deleting account data:', error);
+        res.status(500).send('Error deleting account data');
+    }   
+
 })
 
 module.exports = router

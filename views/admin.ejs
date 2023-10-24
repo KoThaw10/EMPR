@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="admin.css" />
+    <title>Admin Accounts</title>
+    <style></style>
+</head>
+
+<body>
+    <section id="dash">
+        <div class="head-title">
+            <div class="left">
+                <h1>Admin Accounts</h1>
+                <div class="breadcrumb">
+                    <li>
+                        <a href="/admin">Admin Accounts</a>
+                    </li>
+                    <li><i class="bx bx-chevron-right"></i></li>
+                    <li>
+                        <a class="active" href="/dashboard">Home</a>
+                    </li>
+                </div>
+            </div>
+            <div>
+                <!-- Add New Admin Button -->
+                <ul>
+                    <button data-modal-target="#modal1" type="button" class="btn btn-info add-new">
+                        <i class="fa fa-plus"></i> Add New
+                    </button>
+                </ul>
+            </div>
+        </div>
+
+        <ul class="box-info">
+            <% account.forEach(acc=> { %>
+                <li class="profile-card">
+                    <div class="a">
+                        <div class="b">
+                            <div>
+                                <img src="tobio.png" alt="Admin Profile
+                                        Image" />
+                            </div>
+                            <div class="profile-info">
+                                <h3>
+                                    <%= acc.full_name %>
+                                </h3>
+                                <p>
+                                    <%= acc.role %>
+                                </p>
+                                <input type="hidden" id="userId" value="<%=acc.acc_id%>">
+                            </div>
+                        </div>
+
+                        <div class="profile-buttons">
+                            <button data-modal-target="#modal2" class="button">Edit</button>
+                            <button id="deleteLink" del_acc_id=<%=acc.acc_id %> class="deleteButton"
+                                onclick="" title="Delete">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <% }) %>
+        </ul>
+
+        <!-- Add New Admin Modal-->
+        <div class="modal-edit" id="modal1">
+            <div class="modal-header">
+                <div class="title">Add New Admin</div>
+                <button data-close-button class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminForm">
+
+
+                    <div class="formGroup">
+                        <label for="adminFullName">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Admin Full Name" required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="adminRole">Role:</label>
+                        <input type="text" id="role" name="role" placeholder="Admin Role" required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="user_name" name="user_name"
+                            placeholder="username or email" required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="password">Password:</label>
+                        <input placeholder="password" type="text" class="form-control" id="password" name="password"
+                            required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="profileImage">Profile
+                            Image:</label>
+                        <input type="file" id="image" name="image" accept=".png" />
+                    </div>
+
+                    <div class="formGroup">
+                        <button type="submit" onclick="addAccount()">Save</button>
+                        <button type="button" id="cancelButton">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="overlay"></div>
+        <!-- Add New Admin Modal End -->
+
+        <!-- Edit Admin Modal -->
+        <div class="modal-edit" id="modal2">
+            <div class="modal-header">
+                <div class="title">Edit Admin Account</div>
+                <button data-close-button class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminForm">
+                    <div class="formGroup">
+                        <label for="adminID">Acc ID</label>
+                        <input type="text" id="edit_id" name="acc_id" required />
+                    </div>
+                    <div class="formGroup">
+                        <label for="adminFullName">Full Name</label>
+                        <input type="text" id="edit_full_name" name="full_name" placeholder="Admin Full Name"
+                            required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="adminRole">Role:</label>
+                        <input type="text" id="edit_role" name="role" placeholder="Admin Role" required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="edit_user_name" name="user_name"
+                            placeholder="username or email" required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="password">Password:</label>
+                        <input placeholder="password" type="text" class="form-control" id="edit_password"
+                            name="password" required />
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="profileImage">Profile
+                            Image:</label>
+                        <input type="file" id="edit_image" name="image" accept=".png" />
+                    </div>
+
+                    <div class="formGroup">
+                        <button type="submit" id="'editAdminButton" onclick="editAcc()">Save</button>
+                        <button type="button" id="cancelButton">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="overlay"></div>
+        <!-- Edit Admin Modal End -->
+    </section>
+
+    <script>
+        //function openProfile() {
+        //    alert("Profile Clicked");
+        //}
+
+        //Add and Edit Button
+
+        const openModalButtons = document.querySelectorAll("[data-modal-target]");
+        const closeModalButtons = document.querySelectorAll(
+            "[data-close-button]"
+        );
+        const overlay = document.getElementById("overlay");
+
+
+
+
+        openModalButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const modalTarget = button.getAttribute("data-modal-target");
+                const modal = document.querySelector(button.dataset.modalTarget);
+                if (modalTarget === "#modal1") {
+                    displayModal1(modal);
+                } else if (modalTarget === "#modal2") {
+                    displayModal2(button, modal);
+                }
+            });
+        });
+
+        function displayModal1(modal) {
+            openModal(modal)
+        }
+
+
+        // Display edit pop-up box
+        function displayModal2(button, modal) {
+            const accId = button
+                .closest(".profile-card")
+                .querySelector("#userId").value;
+
+            const url = `/admin/${accId}`;
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json(); // Assuming the response is in JSON format
+                    } else {
+                        throw new Error('Failed to fetch account data');
+                    }
+                })
+                .then(accountData => {
+                    document.getElementById('edit_id').value = accountData.account.acc_id
+                    document.getElementById("edit_full_name").value = accountData.account.full_name;
+                    document.getElementById("edit_role").value = accountData.account.role;
+                    document.getElementById("edit_user_name").value = accountData.account.user_name;
+                    document.getElementById("edit_password").value = accountData.account.password;
+
+                })
+                .catch(error => {
+                    console.error(error);
+                    // Handle errors, display an error message, or take appropriate action
+                });
+
+            openModal(modal);
+
+        }
+
+        function addAccount() {
+            const full_name = document.getElementById('full_name').value;
+            const role = document.getElementById('role').value;
+            const user_name = document.getElementById('user_name').value;
+            const password = document.getElementById('password').value;
+            const img = document.getElementById('image').value;
+
+            //Create an object with values
+            const acc = {
+                'role': role,
+                'full_name': full_name,
+                'user_name': user_name,
+                'password': password
+            }
+
+            fetch(`/addAdmin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Set the appropriate content type
+                },
+                body: JSON.stringify(acc)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Admin account Added successfully");
+                        alert("Admin account Added successfully");
+                    } else {
+                        console.log('Error sending data to the server');
+                        alert('Error sending data to the server');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error: " + error);
+                    alert("Error: " + error);
+                });
+
+        }
+
+        function editAcc() {
+
+            // Get the values from input elements
+            const id = document.getElementById('edit_id').value;
+            const full_name = document.getElementById('edit_full_name').value;
+            const role = document.getElementById('edit_role').value;
+            const user_name = document.getElementById('edit_user_name').value;
+            const password = document.getElementById('edit_password').value;
+            const img = document.getElementById('edit_image').value;
+
+            // Create an object with the values
+            const acc = {
+                'acc_id': id,
+                'role': role,
+                'full_name': full_name,
+                'user_name': user_name,
+                'password': password
+            };
+
+            fetch(`/editAdmin/${acc.acc_id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Set the appropriate content type
+                },
+                body: JSON.stringify(acc)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Admin account updated successfully");
+                        alert("Admin account updated successfully");
+                    } else {
+                        console.log('Error sending data to the server');
+                        alert('Error sending data to the server');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error: " + error);
+                    alert("Error: " + error);
+                });
+        };
+
+        function deleteAcc(acc_id) {
+            fetch('/delAcc', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'acc_id': acc_id }),
+            })
+                .then(response => {
+                    if (response.ok) {
+
+                    } else {
+                        alert('Error deleting Account record');
+                    }
+                })
+                .catch(error => {
+                    console.error('Network error:', error);
+                })
+        }
+
+
+        overlay.addEventListener("click", () => {
+            const modals = document.querySelectorAll(".modal.active");
+            modals.forEach((modal) => {
+                closeModal(modal);
+            });
+        });
+
+        closeModalButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const modal = button.closest(".modal-edit");
+                closeModal(modal);
+            });
+        });
+
+        function openModal(modal) {
+            if (modal == null) return;
+            modal.classList.add("active");
+            overlay.classList.add("active");
+        }
+
+        function closeModal(modal) {
+            if (modal == null) return;
+            modal.classList.remove("active");
+            overlay.classList.remove("active");
+        }
+
+
+
+        // Admin Delete button
+        const deleteLink = document.querySelectorAll("#deleteLink");
+        deleteLink.forEach(button => {
+            button.addEventListener('click', () => {
+                const acc_id = button.getAttribute('del_acc_id')
+                console.log(acc_id)
+                swal({
+                    title: "Delete Admin Account",
+                    text: "Are you sure you want to delete this admin account?",
+                    icon: "warning",
+                    buttons: ["Cancel", "Delete"],
+                }).then((confirmed) => {
+                    if (confirmed) {
+                        deleteAcc(acc_id)
+                        swal("Deleted!", "Admin Account has been deleted.", "success");
+                    } else {
+                        swal("Cancelled", "Admin Account was not deleted.", "error");
+                    }
+                });
+            })
+        })
+
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert@2"></script>
+</body>
+
+</html>
