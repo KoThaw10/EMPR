@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 * {
 	margin: 0;
@@ -118,7 +119,6 @@ body {
     background-color: #0056b3;
 }
 
-
 table.table tr th,
 table.table tr td {
     border-color: #e9e9e9;
@@ -131,6 +131,114 @@ table.table th i {
 table.table th:last-child {
     width: 100px;
 }
+
+.modal-edit {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 200ms ease-in-out;
+    border: 1px solid black;
+    border-radius: 10px;
+    z-index: 10;
+    background-color: white;
+    width: 500px;
+    max-width: 80%;
+    
+}
+
+.modal-edit.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+}
+
+.modal-header .title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-right: 100px;
+}
+
+.modal-header .close-button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-left: 100px;
+}
+
+.modal-body {
+    max-width: 400px;
+    margin: 20px auto;
+    background: #f9f9f9;
+    padding: 10px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-height: 500px;
+    overflow: auto;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.modal-body button{
+    padding: 10px 20px;
+    background-color: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-body button[type="button"] {
+    background-color: #ff0000;
+}
+
+.modal-body button:hover {
+background-color: #0056b3;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+input[type="email"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 16px;
+	}
+#overlay {
+    position: fixed;
+    opacity: 0;
+    transition: 200ms ease-in-out;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .5);
+    pointer-events: none;
+}
+
+#overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+
 
 @media screen and (max-width: 770px) {
     

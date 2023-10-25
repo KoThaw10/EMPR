@@ -31,19 +31,21 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-input">
-                          <input type="search" placeholder="Search...">
-                          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                          <input type="search" id="nameSearch" placeholder="Search..." oninput="searchData()">
+                          
                         </div>
+                        
                         <button data-modal-target="#modal1" type="button" class="btn btn-info add-new">
                           <i class="fa fa-plus"></i> Add New 
                         </button>
+                        
                         
                       </div>
                     </div>
                   </div>
                
                   <div>
-                    <table class="table">
+                    <table class="table" id="dataTable">
                       <thead>
                         <tr>
                           <th>ID</th>
@@ -312,6 +314,7 @@
     <script>
         //Add and Edit Button
         const openModalButtons = document.querySelectorAll('[data-modal-target]')
+       
         const closeModalButtons = document.querySelectorAll('[data-close-button]')
         const overlay = document.getElementById('overlay')
         // Get the submit button and form
@@ -388,6 +391,7 @@
 
         //Display edit employee pop-up box
         function displayModal2(button, modal){
+          
           const tableRow = button.closest('tr')
             const fields = ['edit_employee_id','edit_employee_name', 'edit_gender', 'edit_address', 'edit_position', 'edit_department_id', 'edit_date_of_birth', 'edit_email', 'edit_phone'];
             // Loop through the field names and set their corresponding values
@@ -543,6 +547,35 @@
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert@2"></script>
+    <script>
+      function searchData() {
+          // Get the input element
+          const input = document.getElementById('nameSearch');
+          // Get the filter value (name to search for)
+          const filter = input.value.toLowerCase();
+      
+          // Get the table and table rows
+          const table = document.getElementById('dataTable');
+          const rows = table.getElementsByTagName('tr');
+      
+          // Loop through the table rows
+          for (let i = 1; i < rows.length; i++) {
+              const row = rows[i];
+              const nameColumn = row.getElementsByTagName('td')[1]; // Assuming name is in the second column (index 1)
+      
+              if (nameColumn) {
+                  const name = nameColumn.textContent.toLowerCase();
+                  if (name.includes(filter)) {
+                      // Show the row if it matches the search filter
+                      row.style.display = '';
+                  } else {
+                      // Hide the row if it doesn't match
+                      row.style.display = 'none';
+                  }
+              }
+          }
+      }
+    </script>
 
 
 </body>

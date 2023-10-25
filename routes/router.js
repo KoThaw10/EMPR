@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const { format } = require('date-fns');
-const { getData, getEmp, getDep, getDepName, addEmployee, delEmployee, editEmployee, insertAttendance, updateAcc, addAdmin, delAccount } = require('../database')
+const { getData, getEmp, getDep, getDepName, addEmployee, delEmployee, editEmployee, insertAttendance,
+     updateAcc, addAdmin, delAccount, getAttendance, getPayCheck } = require('../database')
 const multer = require('multer')
 const XLSX = require('xlsx');
 const { ro } = require('date-fns/locale');
@@ -80,6 +81,10 @@ router.get('/employee', async(req, res) => {
 
 router.get('/attendance', async(req, res) => {
     res.render('attendance')
+})
+
+router.get('/salary', async(req, res) => {
+    res.render('salary')
 })
 
 router.get('/employees/:name', async (req, res) => {
@@ -218,6 +223,16 @@ router.post('/delAcc', async (req, res) => {
         res.status(500).send('Error deleting account data');
     }   
 
+})
+
+router.get('/getAttandance', async (req, res) => {
+    const result = getAttendance()
+    res.send(result)
+})
+
+router.post('/getPayCheck', async (req, res) => {
+    const data = req.body
+    getPayCheck(data)
 })
 
 module.exports = router

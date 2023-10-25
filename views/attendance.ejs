@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="attendance.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    
+    <link rel="stylesheet" href="/attendance.css">
     <title>Attendance</title>
 </head>
 
@@ -92,6 +96,74 @@
                 </div>
             </div>
         </main>
+        <!-- PAY Button -->
+        <!-- pay pop up box -->
+        <div class="modal-edit" id="modal">
+            <div class="modal-header">
+                <div class="title">Employee Paycheck</div>
+                <button onclick=closeModal() class="close-button">&times;</button>
+              </div>
+              <div class="modal-body">
+                <form id="employeeForm">
+                    <div class="formGroup">
+                      <h3>Employee Information</h3>
+                    </div>
+    
+                    <div class="formGroup">
+                      <label for="employeeID">Employee ID:</label>
+                      <!-- <input type="text" id="employee_id" name="employee_id" required> -->
+                    </div>
+      
+                    <div class="formGroup">
+                        <label for="employeeName">Employee Name:</label>
+                        <!-- <input type="text" id="employee_name" name="employee_name" required> -->
+                    </div>
+        
+                    <div class="formGroup">
+                      <label for="position">Position:</label>
+                      <!-- <input type="text" id="position" name="position" required> -->
+                    </div>
+      
+                    <div class="formGroup">
+                      <label for="employeeDep">Department:</label>
+                      <!-- <input type="text" id="department_id" name="department_id" required> -->
+                    </div>
+        
+                    <div class="formGroup">
+                      <h3>Paycheck</h3>
+                    </div>
+    
+                    <div class="formGroup">
+                      <label for="basicSalary"> Basic Salary:</label>
+                    </div>
+        
+                    <div class="formGroup">
+                        <label for="leave" id="#">Leave:</label>
+                    </div>
+    
+                    <div class="formGroup">
+                      <label for="deduction" id="#">Deducted Amount:</label>
+                  </div>
+        
+                    <div class="formGroup">
+                        <label for="tax" id="">Tax:</label>
+                    </div>
+    
+    
+                    <div class="formGroup">
+                      <h3>Total: </h3>
+                    </div>
+                  
+                    <div class="formGroup">
+                      <button type="submit">Update</button>
+                      <button type="button" onclick=closeModal() data-close-button id="cancelButton">Cancel</button>
+                    </div>
+                </form>
+              </div>
+        </div>
+        <div id="overlay"></div>
+        <!-- end of pay pop up box -->
+        <!-- End of pay BUTTON -->
     </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
@@ -131,6 +203,7 @@
             // Clear the existing table body.
             attendanceTable.getElementsByTagName("tbody")[0].innerHTML = "";
 
+
             // Create a new table body and populate it with the data from the Excel file.
             const tbody = attendanceTable.getElementsByTagName("tbody")[0];
             data.data.forEach(item => {
@@ -140,6 +213,22 @@
                     cell.textContent = item[key];
                     row.appendChild(cell);
                 }
+                const payCell = document.createElement("td");
+                        const payButton = document.createElement("button");
+                        payButton.id = 'payButton';
+                        payButton.dataset.modalTarget = '#modal'; // Set the data-modal-target attribute
+                        payButton.type = 'paybutton'; // Set the type attribute
+                        payButton.className = 'btn btn-info';
+                        payButton.textContent = 'Pay';
+
+                        payButton.addEventListener('click', function () {
+                            const closestRow = this.closest('tr');
+                            openModal(this.dataset.modalTarget, closestRow); // Pass the data to the openModal function
+                            
+                        });
+
+                        payCell.appendChild(payButton);
+                        row.appendChild(payCell);
                 tbody.appendChild(row);
             });
         }
@@ -171,6 +260,71 @@
                 }
             }
         }
+
+
+        function payFunction(emp_id){
+            openModal
+        }
+
+        const overlay = document.getElementById('overlay');
+        
+        // Function to open the modal
+        function openModal(target, data) {
+            const empId = data.cells[0].textContent
+            const month = data.cells[12].textContent
+            const year = data.cells[13].textContent
+
+            const requestData = {
+                empId: empId,
+                month: month,
+                year: year
+            }
+
+            const result = getPayCheck(requestData)
+
+            const modal = document.querySelector(target);
+            console.log(modal)
+            if (modal) {
+                console.log('enter')
+                modal.classList.add('active')
+                overlay.classList.add('active')
+        
+            }
+        }
+
+        function getPayCheck(data){
+            fetch('/getPayCheck', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // Add any other headers as needed
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json()// Request was successful, you can handle the response here
+                    } else {
+                        // Request failed, handle the error
+                        console.error('Error:', response.status, response.statusText);
+                    }
+                })
+                .catch(error => {
+                    // Handle network errors
+                    console.error('Network error:', error);
+                });
+        }        
+
+
+        // Function to close the modal
+        function closeModal() {
+            const modal = document.getElementById('modal')
+            modal.classList.remove('active')
+            overlay.classList.remove('active')
+        }
+
+        
+
     </script>
 </body>
 

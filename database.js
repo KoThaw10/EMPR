@@ -13,7 +13,7 @@ async function getData(){
     try {
         const [rows] = await pool.query(`
           SELECT * 
-          FROM account`
+          FROM admin_account`
         )
         return rows;
       } catch (error) {
@@ -145,7 +145,7 @@ async function editEmployee(employeeData) {
 
 async function insertAttendance(data){
   // Insert data into MySQL database
-  const insertQuery = 'INSERT INTO attendance ( employee_id, employee_name, casual_leave, medical_leave, marriage_leave, maternity_leave, valance_casual_leave, valance_medical_leave, valance_marriage_leave, valance_maternity_leave, attendance, total_attendance, month, year) VALUES ?';
+  const insertQuery = 'INSERT INTO attendance ( employee_id, employee_name, casual_leave, medical_leave, marriage_leave, maternity_leave, balance_casual_leave, balance_medical_leave, balance_marriage_leave, balance_maternity_leave, attendance, total_attendance, month, year) VALUES ?';
   const values = data.map(row => [
     row['Employee_id'],
     row['Employee_name'],
@@ -176,7 +176,7 @@ async function insertAttendance(data){
 
 async function updateAcc(acc, accountID){
   const query = `
-    UPDATE account
+    UPDATE admin_account 
     SET ?
     WHERE acc_id = ?
     `
@@ -190,7 +190,7 @@ async function updateAcc(acc, accountID){
 async function addAdmin(acc){
   try {
     const query = `
-    INSERT INTO account 
+    INSERT INTO admin_account 
     SET ?
   `
   const params = [acc]
@@ -205,7 +205,7 @@ async function addAdmin(acc){
 async function delAccount(acc_id){
   try {
     // Delete the account based on the account id
-    const query = 'DELETE FROM account WHERE acc_id = ?'
+    const query = 'DELETE FROM admin_account WHERE acc_id = ?'
     const params = [acc_id]
 
     const [results, fields] = await pool.query(query, params)
@@ -220,6 +220,24 @@ async function delAccount(acc_id){
   }
 }
 
+async function getAttendance(){
+  try {
+    const [rows] = await pool.query(`
+      SELECT * 
+      FROM attandance`
+    )
+    return rows
+  } catch (error) {
+    // Handle database query error here
+    throw error;
+  }
+}
+
+async function getPayCheck(data){
+  console.log(data)
+}
+
+
 module.exports = {
     getData,
     getEmp,
@@ -231,5 +249,7 @@ module.exports = {
     insertAttendance,
     updateAcc,
     addAdmin,
-    delAccount
+    delAccount,
+    getAttendance,
+    getPayCheck
 }
