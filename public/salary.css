@@ -103,6 +103,22 @@ body {
     background-color: #0056b3;
 }
 
+.searchButton{
+    height: 25px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 5px;
+    background-color: var(--blue);
+    margin-top: 25px;
+    color: white;
+}
+
+.searchButton:hover {
+    background-color: #0056b3;
+}
+
 .input{
     height: 30px;
     font-size: 12px;
@@ -118,6 +134,30 @@ body {
     background-color: #0056b3;
 }
 
+.month{
+    height: 25px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    width: 160px;
+    border-radius: 5px;
+    background-color: var(--blue);
+    margin-top: 25px;
+    color: white;
+}
+.year{
+    height: 25px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    width: 160px;
+    border-radius: 5px;
+    background-color: var(--blue);
+    margin-top: 25px;
+    color: white;
+}
 
 table.table tr th,
 table.table tr td {
@@ -158,5 +198,22 @@ table.table th:last-child {
     .table td:nth-child(7) {
         display: none;
     } */
+}
+
+@media screen and (max-width: 500px){
+    .month {
+        width: 70%; 
+        margin-top: 10px; 
+        align-items: center;
+
+    }
+
+    .year {
+        width: 70%; 
+        margin-top: 10px; 
+        align-items: center;
+    }
+
+   
 }
 

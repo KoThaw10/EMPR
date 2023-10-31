@@ -14,36 +14,37 @@
     <section id="employee">
         <main>
             <div class="container">
-                <div class="table-wrapper">
-                  <div class="table-title">
-                    <div class="row">
-                      <div class="col-sm-6">
-                        <h1>Employee Details</h1>
-                        <!-- <ul class="breadcrumb">
-                          <li>
-                              <a href="employee.html">Employee</a>
-                           </li>
-                          <li><i class='bx bx-chevron-right'></i></li>
-                          <li>
-                              <a class="active" href="dashboard.html">Home</a>
-                          </li>
-                      </ul> -->
-                      </div>
-                      <div class="col-sm-4">
-                        <div class="form-input">
-                          <input type="search" id="nameSearch" placeholder="Search..." oninput="searchData()">
-                          
-                        </div>
-                        
-                        <button data-modal-target="#modal1" type="button" class="btn btn-info add-new">
-                          <i class="fa fa-plus"></i> Add New 
-                        </button>
-                        
-                        
-                      </div>
-                    </div>
+              <div class="table-title">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h1>Employee Details</h1>
+                    <!-- <ul class="breadcrumb">
+                      <li>
+                          <a href="employee.html">Employee</a>
+                       </li>
+                      <li><i class='bx bx-chevron-right'></i></li>
+                      <li>
+                          <a class="active" href="dashboard.html">Home</a>
+                      </li>
+                  </ul> -->
                   </div>
-               
+                  <div class="col-sm-4">
+                    
+                    
+                    <button data-modal-target="#modal1" type="button" class="btn btn-info add-new">
+                      <i class="fa fa-plus"></i> Add New 
+                    </button>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-wrapper">
+                  <div class="form-input">
+                    <input type="search" id="nameSearch" placeholder="Search..." oninput="searchData()">
+                  </div>
+                  
                   <div>
                     <table class="table" id="dataTable">
                       <thead>
@@ -57,8 +58,8 @@
                           <th>DOB</th>
                           <th>Email</th>
                           <th>Phone</th>
+                          <th>Basic Salary</th>
                           <th>Actions</th>
-                          <th>Pay Salary</th>
                     
                         </tr>
                       </thead>
@@ -75,15 +76,14 @@
                           <td><%= employee.dob%></td>
                           <td><%= employee.email %></td>
                           <td><%= employee.phone %></td>
+                          <td><%= employee.basic_salary %></td>
                           <td>        
                               <a data-modal-target="#modal2" id="editLink"  class="edit" title="Edit"><i class="fas fa-edit"></i>
                               </a>
                               <a id="deleteLink" class="delete" data-employee-id="<%= employee.id %>" title="Delete"><i class="fas fa-trash"></i>
                               </a>
                           </td>
-                          <td>
-                            <button data-modal-target="#modal3" id="payButton" type="paybutton" class="btn btn-info">Pay</button>
-                          </td>
+                          
                         </tr>
 
                       <% }) %>
@@ -104,7 +104,7 @@
             <button data-close-button class="close-button">&times;</button>
           </div>
           <div class="modal-body">
-            <form id="employeeForm">
+            <form id="employeeForm" onsubmit="addSubmitAction()">
               <div class="formGroup">
                 <label for="employeeID">Employee ID:</label>
                 <input type="text" id="employee_id" name="employee_id" placeholder="Valid Employee ID" required>
@@ -117,7 +117,10 @@
 
               <div class="formGroup">
                 <label for="employeeGender">Gender:</label>
-                <input type="text" id="gender" name="gender" placeholder="Employee Gender" required>
+                <select name="gender" id="gender" required>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
               </div>
 
               <div class="formGroup">
@@ -131,8 +134,13 @@
               </div>
   
               <div class="formGroup">
-                  <label for="employeeDep">Department:</label>
-                  <input type="text" id="department_id" name="department_id" placeholder="Employee Department" required>
+                <label for="employeeDep">Department:</label>
+                <select id="department_id" name="department_id" required>
+                  <option value="HR">HR</option>
+                  <option value="IT">IT</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Finance">Finance</option>
+                </select>
               </div>
   
               <div class="formGroup">
@@ -151,10 +159,17 @@
                 <input type="tel" id="phone" name="phone" placeholder="+95 9..." required>
             </div>
 
-              <div class="formGroup">
+            <div class="formGroup">
+              <label for="basic_salary">Basic Salary:</label>
+              <input type="number" id="basic_salary" name="basic_salary" >
+            </div>
+
+              <!-- <div class="formGroup">
                 <label for="image">Profile Image:</label>
                 <input type="file" id="image" name="image"accept=".png">
-              </div>
+              </div> -->
+
+              
   
               <div class="formGroup">
                   <button type="submit" id="addSubmitButton">Confirm</button>
@@ -175,10 +190,10 @@
             <button data-close-button class="close-button">&times;</button>
           </div>
           <div class="modal-body">
-            <form id="employeeForm">
+            <form id="employeeForm" onsubmit="editSubmitAction()">
               <div class="formGroup">
                 <label for="employeeID">Employee ID:</label>
-                <input type="text" id="edit_employee_id" name="employee_id" placeholder="Valid Employee ID" required>
+                <input type="text" id="edit_employee_id" name="employee_id" placeholder="Valid Employee ID" required disabled>
               </div>
 
               <div class="formGroup">
@@ -188,7 +203,10 @@
 
               <div class="formGroup">
                 <label for="employeeGender">Gender:</label>
-                <input type="text" id="edit_gender" name="gender" placeholder="Employee Gender" required>
+                <select name="gender" id="edit_gender" required>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
               </div>
 
               <div class="formGroup">
@@ -202,8 +220,13 @@
               </div>
   
               <div class="formGroup">
-                  <label for="employeeDep">Department:</label>
-                  <input type="text" id="edit_department_id" name="department_id" placeholder="Employee Department" required>
+                <label for="employeeDep">Department:</label>
+                <select id="edit_department_id" name="department_id" required>
+                  <option value="HR">HR</option>
+                  <option value="IT">IT</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Finance">Finance</option>
+                </select>
               </div>
   
               <div class="formGroup">
@@ -214,18 +237,23 @@
   
               <div class="formGroup">
                   <label for="email">Email:</label>
-                  <input type="email" id="edit_email" name="email" placeholder="admin@gmail.com" placeholder="Employee Valid Email" required>
+                  <input type="email" id="edit_email" name="email" placeholder="admin@gmail.com"  required>
               </div>
 
               <div class="formGroup">
                 <label for="phone">Phone Number:</label>
-                <input type="tel" id="edit_phone" name="phone" placeholder="+95 9..." placeholder="Employee Valid Contact Number" required>
+                <input type="tel" id="edit_phone" name="phone" placeholder="+95 9..." required>
             </div>
 
-              <div class="formGroup">
+            <div class="formGroup">
+              <label for="basic_salary">Basic Salary:</label>
+              <input type="number" id="edit_basic_salary" name="basic_salary" required >
+            </div>
+
+              <!-- <div class="formGroup">
                 <label for="image">Profile Image:</label>
                 <input type="file" id="edit_image" name="image"accept=".png">
-              </div>
+              </div> -->
   
               <div class="formGroup">
                   <button type="submit" id="editSubmitButton">Confirm</button>
@@ -238,74 +266,6 @@
         <!-- end of edit pop up box -->
         <!-- End of EDIT BUTTON -->
         
-         <!-- PAY Button -->
-        <!-- pay pop up box -->
-        <div class="modal-edit" id="modal3">
-          <div class="modal-header">
-            <div class="title">Employee Paycheck</div>
-            <button data-close-button class="close-button">&times;</button>
-          </div>
-          <div class="modal-body">
-            <form id="employeeForm">
-                <div class="formGroup">
-                  <h3>Employee Information</h3>
-                </div>
-
-                <div class="formGroup">
-                  <label for="employeeID">Employee ID:</label>
-                  <!-- <input type="text" id="employee_id" name="employee_id" required> -->
-                </div>
-  
-                <div class="formGroup">
-                    <label for="employeeName">Employee Name:</label>
-                    <!-- <input type="text" id="employee_name" name="employee_name" required> -->
-                </div>
-    
-                <div class="formGroup">
-                  <label for="position">Position:</label>
-                  <!-- <input type="text" id="position" name="position" required> -->
-                </div>
-  
-                <div class="formGroup">
-                  <label for="employeeDep">Department:</label>
-                  <!-- <input type="text" id="department_id" name="department_id" required> -->
-                </div>
-    
-                <div class="formGroup">
-                  <h3>Paycheck</h3>
-                </div>
-
-                <div class="formGroup">
-                  <label for="basicSalary"> Basic Salary:</label>
-                </div>
-    
-                <div class="formGroup">
-                    <label for="leave" id="#">Leave:</label>
-                </div>
-
-                <div class="formGroup">
-                  <label for="deduction" id="#">Deducted Amount:</label>
-              </div>
-    
-                <div class="formGroup">
-                    <label for="tax" id="#">Tax:</label>
-                </div>
-
-
-                <div class="formGroup">
-                  <h3>Total: </h3>
-                </div>
-              
-                <div class="formGroup">
-                  <button type="submit">Update</button>
-                  <button type="button" data-close-button id="cancelButton">Cancel</button>
-                </div>
-            </form>
-        </div>
-        </div>
-        <div id="overlay"></div>
-        <!-- end of pay pop up box -->
-        <!-- End of pay BUTTON -->
 
     </section>
 
@@ -393,7 +353,7 @@
         function displayModal2(button, modal){
           
           const tableRow = button.closest('tr')
-            const fields = ['edit_employee_id','edit_employee_name', 'edit_gender', 'edit_address', 'edit_position', 'edit_department_id', 'edit_date_of_birth', 'edit_email', 'edit_phone'];
+            const fields = ['edit_employee_id','edit_employee_name', 'edit_gender', 'edit_address', 'edit_position', 'edit_department_id', 'edit_date_of_birth', 'edit_email', 'edit_phone', 'edit_basic_salary'];
             // Loop through the field names and set their corresponding values
             var i = 0
             fields.forEach(fieldName => {
@@ -409,8 +369,7 @@
 
 
         // Add a click event listener to the submit button
-        addSubmitButton.addEventListener('click', function(event) {
-          event.preventDefault() // Prevent the form from submitting
+        function addSubmitAction() {
 
           // Get the input values
           const employee_id = document.getElementById('employee_id').value
@@ -422,6 +381,8 @@
           const date_of_birth = document.getElementById('date_of_birth').value
           const email = document.getElementById('email').value
           const phone = document.getElementById('phone').value
+          const basic_salary = document.getElementById('basic_salary').value
+          
           //const image = document.getElementById('image').value 
 
           //input data into object
@@ -434,7 +395,8 @@
             'department_id': department,
             'date_of_birth': date_of_birth,
             'email': email,
-            'phone': phone
+            'phone': phone,
+            'basic_salary': basic_salary
             //'image': image
           }
           
@@ -459,11 +421,10 @@
             console.error("Network error")
           })
           refreshPage()
-        })
+        }
 
         // Add a click event listener to the edit button
-        editSubmitButton.addEventListener('click', function(event) {
-          event.preventDefault()
+        function editSubmitAction() {
 
           // Get the value
           const employee_id = document.getElementById('edit_employee_id').value
@@ -512,7 +473,8 @@
           .catch(error => {
             alert('Error: ' + error.sqlMessage);
           })
-        })
+
+        }
 
         overlay.addEventListener('click', () => {
           const modals = document.querySelectorAll('.modal.active')

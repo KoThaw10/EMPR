@@ -22,6 +22,21 @@ async function getData(){
       }
 }
 
+async function getDataId(id){
+  try {
+      const [rows] = await pool.query(`
+        SELECT * 
+        FROM admin_account
+        WHERE acc_id = ?
+        `, [id]
+      )
+      return rows;
+    } catch (error) {
+      // Handle database query error here
+      throw error;
+    }
+}
+
 async function getDep(){
   try {
     const [rows] = await pool.query(`
@@ -66,14 +81,12 @@ async function getDepName(depid){
 
 async function addEmployee(employeeData) {
   try {
-    const department_name = employeeData.department_id; 
-    console.log(employeeData)
+    const department_name = employeeData.department_id;
     // First, fetch the 'department_id' using the 'department' name
     const [departmentResult] = await pool.query(
       'SELECT department_id FROM department WHERE department_name = ?',
       [department_name]
     )
-    console.log(departmentResult[0].department_id)
     const departmentId = departmentResult[0].department_id
     employeeData.department_id = departmentId
     const query = `
@@ -110,13 +123,11 @@ async function delEmployee(employee_id){
 async function editEmployee(employeeData) {
   try {
     const department_name = employeeData.department_id; 
-    console.log(employeeData)
     // First, fetch the 'department_id' using the 'department' name
     const [departmentResult] = await pool.query(
       'SELECT department_id FROM department WHERE department_name = ?',
       [department_name]
     )
-    console.log(departmentResult[0].department_id)
     const departmentId = departmentResult[0].department_id
     employeeData.department_id = departmentId
 
@@ -130,7 +141,6 @@ async function editEmployee(employeeData) {
     const params = [employeeData, employee_id]
 
     const [results, fields] = await pool.query(query, params)
-    console.log(results)
     var flag = false
     if (results.affectedRows === 1) {
       return flag = true
@@ -183,7 +193,6 @@ async function updateAcc(acc, accountID){
     const params = [acc, accountID]
 
     const [results, fields] = await pool.query(query, params)
-    console.log(results)
 
 }
 
@@ -233,9 +242,179 @@ async function getAttendance(){
   }
 }
 
-async function getPayCheck(data){
-  console.log(data)
+async function checkPaid(data){
+  try {
+    const query = 'SELECT * FROM salary WHERE employee_id = ? AND month = ? AND year = ?';
+    const params = [data.empId, data.month, data.year];
+
+    const [results, fields] = await pool.query(query, params)
+    console.log(results.length+ " in checkPaid")
+    return results
+  } catch (error) {
+    throw error;
+  }
 }
+
+async function getPayCheck(data){
+  const emp_id = parseInt(data['empId'])
+  var emp_data
+  try {
+    const query = 'SELECT * FROM employee WHERE employee_id = ?'
+    const params = [emp_id]
+
+    const [results, fields] = await pool.query(query, params)
+    emp_data = results
+  } catch (error) {
+    throw error;
+  }
+  const dep_name = await getDepName(emp_data[0].department_id)
+  const leave = 0
+  if(data['casual_l'] > data['b_casual_l']){
+    leave += (data['casual_l'] - data['b_casual_l'])
+
+  }else if (data['medical_l'] > data['b_medical_l']){
+    leave += (data['medical_l'] - data['b_medical_l'])
+
+  }else if (data['maternity_l'] > data['b_maternity_l']){
+    leave += (data['maternity_l'] - data['b_maternity_l'])
+
+  }else if (data['marriage_l'] > data['b_marriage_l']){
+    leave += (data['marriage_l'] - data['b_marriage_l'])
+  }
+  const leave_reduction_rate = 150
+  const tax = 0.05
+
+  var total_salary = 0
+  var decucted_amount = 0
+
+  if(leave == 0 ){
+      total_salary = emp_data[0].basic_salary - (emp_data[0].basic_salary * tax)
+      
+  }else{
+      total_salary = emp_data[0].basic_salary - ((emp_data[0].basic_salary - (leave_reduction_rate * leave)) * tax)
+      decucted_amount = leave_reduction_rate * leave
+  }
+
+  const return_data = {
+    "employee_id": emp_data[0].employee_id,
+    "employee_name": emp_data[0].employee_name,
+    "position": emp_data[0].position,
+    "department_name": dep_name,
+    "basic_salary": emp_data[0].basic_salary,
+    "leave":  leave,
+    "deduction": decucted_amount,
+    "tax": "5%",
+    "total": total_salary,
+    "month": data.month,
+    "year": data.year
+}
+
+return return_data
+
+}
+
+async function insertSalary(data) {
+
+  // Convert specific fields to integers
+  const integerFields = ['employee_id', 'basic_salary', 'deduction', 'total'];
+
+  for (const item of data) {
+    if (integerFields.includes(item.key)) {
+      item.value = parseInt(item.value);
+    }
+  }
+  
+  
+ 
+  try {
+    const sql = 'INSERT INTO salary (employee_id, employee_name, basic_salary, tax, deduction, total_salary, month, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+
+    const values = data.map(item => item.value);
+    console.log(data)
+    const [rows] = await pool.query(sql, values)
+   
+    return rows
+    } catch (error) {
+      throw error;
+  }
+
+
+  
+}
+
+async function searchAttByDate(params) {
+  
+  try {
+    const sql = `SELECT employee_id, employee_name, casual_leave, medical_leave, marriage_leave, maternity_leave,
+     balance_casual_leave, balance_medical_leave,  balance_marriage_leave, balance_maternity_leave, attendance, total_attendance, month, year
+    FROM attendance WHERE month = ? AND year = ?`;
+    
+    const [rows] = await pool.query(sql, params)
+   
+    return rows
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getSalary(){
+  try {
+      const [rows] = await pool.query(`
+        SELECT salary_id, employee_id, employee_name, basic_salary, tax, total_salary, month, year
+        FROM salary
+        ORDER BY year DESC,
+         CASE
+            WHEN month = 'Jan' THEN 1
+            WHEN month = 'Feb' THEN 2
+            WHEN month = 'Mar' THEN 3
+            WHEN month = 'Apr' THEN 4
+            WHEN month = 'May' THEN 5
+            WHEN month = 'Jun' THEN 6
+            WHEN month = 'Jul' THEN 7
+            WHEN month = 'Aug' THEN 8
+            WHEN month = 'Sep' THEN 9
+            WHEN month = 'Oct' THEN 10
+            WHEN month = 'Nov' THEN 11
+            WHEN month = 'Dec' THEN 12
+         END DESC
+        `
+      )
+      return rows;
+    } catch (error) {
+      // Handle database query error here
+      throw error;
+    }
+}
+
+async function getSalaryByMth(month){
+  try {
+    const [rows] = await pool.query(`
+      SELECT salary_id
+      FROM salary
+      WHERE month = ?
+      `, [month]
+    )
+    return rows;
+  } catch (error) {
+    // Handle database query error here
+    throw error;
+  }
+}
+
+async function searchSalaryByDate(params) {
+  
+  try {
+    const sql = `SELECT salary_id, employee_id, employee_name, basic_salary, tax, total_salary, month, year
+    FROM salary WHERE month = ? AND year = ?`
+    
+    const [rows] = await pool.query(sql, params)
+   
+    return rows
+  } catch (error) {
+    throw error;
+  }
+}
+
 
 
 module.exports = {
@@ -251,5 +430,12 @@ module.exports = {
     addAdmin,
     delAccount,
     getAttendance,
-    getPayCheck
+    getPayCheck,
+    insertSalary,
+    searchAttByDate,
+    getSalary,
+    getSalaryByMth,
+    getDataId,
+    searchSalaryByDate,
+    checkPaid
 }

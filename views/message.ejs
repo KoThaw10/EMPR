@@ -1,10 +1,14 @@
 <html>
 <body>
-  <p><%= message %></p>
+  <p id="message"><%= message %></p>
   <script>
-    setTimeout(function () {
+    const messageElement = document.getElementById('message')
+    const messageElementValue = document.getElementById('message').textContent
+    messageElement.style.display = 'none';
+   
+    if (confirm(messageElementValue)) {
       window.location.href = '<%= redirectUrl %>';
-    }, 3000); // Redirect after 3 seconds
+    }
   </script>
 </body>
 </html>

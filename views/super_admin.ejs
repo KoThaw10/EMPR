@@ -26,7 +26,14 @@
                     </li>
                 </div>
             </div>
-            
+            <div>
+                <!-- Add New Admin Button -->
+                <ul>
+                    <button data-modal-target="#modal1" type="button" class="btn btn-info add-new">
+                        <i class="fa fa-plus"></i> Add New
+                    </button>
+                </ul>
+            </div>
         </div>
 
         <ul class="box-info">
@@ -63,6 +70,48 @@
 
         
 
+        <!-- Add New Admin Modal-->
+        <div class="modal-edit" id="modal1">
+            <div class="modal-header">
+                <div class="title">Add New Admin</div>
+                <button data-close-button class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminForm" onsubmit="addAccount()">
+                    <div class="formGroup">
+                        <label for="adminFullName">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="Admin Full Name" required>
+                    </div>
+                    
+                    <div class="formGroup">
+                        <label for="adminRole">Admin Role:</label>
+                        <select name="role" id="role" required>
+                            <option value="#">Super Admin</option>
+                            <option value="#">Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="user_name" name="user_name" placeholder="username or email" required>
+                    </div>
+
+                    <div class="formGroup">
+                        <label for="password">Password:</label>
+                        <input placeholder="password" type="password" class="form-control" id="password" name="password" required>
+                    </div>
+
+                    
+        
+                    <div class="formGroup">
+                      <button type="submit" id="addSubmit" >Save</button>
+                      <button type="button" data-close-button  id="cancelButton">Cancel</button>                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="overlay"></div>
+        <!-- Add New Admin Modal End -->
+
         <!-- Edit Admin Modal -->
         <div class="modal-edit" id="modal2">
             <div class="modal-header">
@@ -83,7 +132,10 @@
 
                     <div class="formGroup">
                         <label for="adminRole">Admin Role:</label>
-                        <input type="text" id="edit_role" name="role" required disabled />
+                        <select name="role" id="edit_role" required>
+                            <option value="super_admin">Super Admin</option>
+                            <option value="admin">Admin</option>
+                        </select>
                     </div>
 
                     <div class="formGroup">
@@ -144,7 +196,7 @@
         });
 
         function displayModal1(modal) {
-            
+            openModal(modal)
         }
 
 
@@ -180,6 +232,47 @@
 
         }
 
+       
+        
+        function addAccount() {
+            const full_name = document.getElementById('full_name').value;
+            const role = document.getElementById('role').value;
+            const user_name = document.getElementById('user_name').value;
+            const password = document.getElementById('password').value;
+            
+
+            //Create an object with values
+            const acc = {
+                'role': role,
+                'full_name': full_name,
+                'user_name': user_name,
+                'password': password
+            }
+
+            fetch(`/addAdmin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Set the appropriate content type
+                },
+                body: JSON.stringify(acc)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Admin account Added successfully");
+                        alert("Admin account Added successfully");
+                    } else {
+                        console.log('Error sending data to the server');
+                        alert('Error sending data to the server');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error: " + error);
+                    alert("Error: " + error);
+                });
+                refreshPage()
+
+        }
+
         function editAcc() {
 
             // Get the values from input elements
@@ -188,7 +281,7 @@
             const role = document.getElementById('edit_role').value;
             const user_name = document.getElementById('edit_user_name').value;
             const password = document.getElementById('edit_password').value;
-            const img = document.getElementById('edit_image').value;
+            //const img = document.getElementById('edit_image').value;
 
             // Create an object with the values
             const acc = {

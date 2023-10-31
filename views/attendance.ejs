@@ -19,58 +19,59 @@
     <section id="attendance">
         <main>
             <div class="container">
-                <div class="table-wrapper">
-                    <div class="table-title">
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <h1>Attendance Details</h1>
-                                <ul class="breadcrumb">
-                                    <li>
-                                        <a href="/attendance">Attendance</a>
-                                    </li>
-                                    <li><i class='bx bx-chevron-right'></i></li>
-                                    <li>
-                                        <a class="active" href="/dashboard">Home</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-4">
-                                <button class="import" onclick="importData()">Import Data</button>
-                                <input class="input" type="file" id="fileInput" accept=".xlsx"><br>
-                            </div>
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h1>Attendance Details</h1>
+                            <!-- <ul class="breadcrumb">
+                                <li>
+                                    <a href="/attendance">Attendance</a>
+                                </li>
+                                <li><i class='bx bx-chevron-right'></i></li>
+                                <li>
+                                    <a class="active" href="/dashboard">Home</a>
+                                </li>
+                            </ul> -->
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="import" onclick="importData()">Import Data</button>
+                            <input class="input" type="file" id="fileInput" accept=".xlsx"><br>
                         </div>
                     </div>
-                    <div>
-                    <input type="text" id="nameSearch" placeholder="Search by Name" oninput="searchData()">
+                </div>
+
+                <div class="table-wrapper">  
+                    <div class="form-input">
+                        <input type="text" id="nameSearch" placeholder="Search by Name" oninput="searchData()">
                     </div>
                     <div class="search-options">
                         <!-- Monthly and Annual search dropdowns -->
-                        <select id="monthSelector">
+                        <select id="monthSelector" class="month">
                             <option value="">Select Month</option>
-                            <option value="01">January</option>
-                            <option value="02">February</option>
-                            <option value="03">March</option>
-                            <option value="04">April</option>
-                            <option value="05">May</option>
-                            <option value="06">June</option>
-                            <option value="07">July</option>
-                            <option value="08">August</option>
-                            <option value="09">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
+                            <option value="Jan">January</option>
+                            <option value="Feb">February</option>
+                            <option value="Mar">March</option>
+                            <option value="Apr">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="Jul">July</option>
+                            <option value="Aug">August</option>
+                            <option value="Sep">September</option>
+                            <option value="Oct">October</option>
+                            <option value="Nov">November</option>
+                            <option value="Dec">December</option>
                         </select>
 
-                        <select id="yearSelector">
+                        <select id="yearSelector" class="year">
                             <option value="">Select Year</option>
-                            <option value="2023">2021</option>
-                            <option value="2024">2022</option>
-                            <option value="2025">2023</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
                             <!-- Add more years as needed -->
                         </select>
 
                         <!-- Combined search button -->
-                        <button onclick="searchData()">Search</button>
+                        <button class="searchButton" onclick="searchDataMothYear()">Search</button>
                     </div>
                     <table class="table" id="attendance" style="font-size: x-small;">
                         <thead>
@@ -87,6 +88,8 @@
                                 <th>Value of Marriage Leave</th>
                                 <th>Attendance</th>
                                 <th>Total Attendance</th>
+                                <th>Month</th>
+                                <th>Year</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -111,22 +114,22 @@
     
                     <div class="formGroup">
                       <label for="employeeID">Employee ID:</label>
-                      <!-- <input type="text" id="employee_id" name="employee_id" required> -->
+                        <p id="employee_id"></p>
                     </div>
       
                     <div class="formGroup">
                         <label for="employeeName">Employee Name:</label>
-                        <!-- <input type="text" id="employee_name" name="employee_name" required> -->
+                        <p id="employee_name"></p>
                     </div>
         
                     <div class="formGroup">
                       <label for="position">Position:</label>
-                      <!-- <input type="text" id="position" name="position" required> -->
+                      <p id="position"></p>
                     </div>
       
                     <div class="formGroup">
                       <label for="employeeDep">Department:</label>
-                      <!-- <input type="text" id="department_id" name="department_id" required> -->
+                      <p id="department_name"></p>
                     </div>
         
                     <div class="formGroup">
@@ -135,27 +138,34 @@
     
                     <div class="formGroup">
                       <label for="basicSalary"> Basic Salary:</label>
+                      <p id="basic_salary"></p>
                     </div>
         
                     <div class="formGroup">
                         <label for="leave" id="#">Leave:</label>
+                        <p id="leave"></p>
                     </div>
     
                     <div class="formGroup">
                       <label for="deduction" id="#">Deducted Amount:</label>
+                      <p id="deduction"></p>
                   </div>
         
                     <div class="formGroup">
                         <label for="tax" id="">Tax:</label>
+                        <p id="tax"></p>
                     </div>
     
-    
+                    
                     <div class="formGroup">
                       <h3>Total: </h3>
+                      <p id="total"></p>
                     </div>
+                    <p id="month" style="display: none;"></p>
+                    <p id="year" style="display: none;"></p>
                   
                     <div class="formGroup">
-                      <button type="submit">Update</button>
+                      <button type="submit" onclick=updateData()>Update</button>
                       <button type="button" onclick=closeModal() data-close-button id="cancelButton">Cancel</button>
                     </div>
                 </form>
@@ -190,6 +200,7 @@
             .then(response => response.json())
             .then(data => {
                 // Handle the data from the server and display
+                
                 showData(data)
             })
             .catch(error => {
@@ -197,6 +208,43 @@
             });
             
         }
+
+        function searchDataMothYear() {
+            // Get selected month and year values
+            const selectedMonth = document.getElementById('monthSelector').value;
+            const selectedYear = document.getElementById('yearSelector').value;
+            
+            if (selectedMonth && selectedYear) {
+                const dataD = {
+                    month: selectedMonth,
+                    year: parseInt(selectedYear)
+                };
+        
+                // Make a POST request to the server
+                fetch('/getAttMonthYear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataD)
+                })
+                    .then(response => {
+                        return response.json(); // Parse the response as JSON
+                    })
+                    .then(data => {
+                        showData(data);
+                        // You can update the page with the fetched data here
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+                
+            } else {
+                // Handle the case where a month and year are not selected
+                alert('Please select a month and a year.');
+            }
+        }
+
 
         function showData(data){
             const attendanceTable = document.getElementById("attendance")
@@ -261,9 +309,39 @@
             }
         }
 
+        function updateData(){
+            const data = []
+            const fields = ['employee_id', 'employee_name', 'basic_salary',  'tax', 'deduction', 'total', 'month', 'year']
+            fields.forEach(fieldName => {
+                const inputField = modal.querySelector(`#${fieldName}`)
+            if (inputField){
+                const dataObject = {
+                    key: fieldName,
+                    value: inputField.textContent
+                };
+                data.push(dataObject);
+            } 
+            })
+            console.log(data)
+            insertSalary(data)
 
-        function payFunction(emp_id){
-            openModal
+        }
+
+        function insertSalary(data){
+            fetch('/insertSalary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Insertion result:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
 
         const overlay = document.getElementById('overlay');
@@ -271,48 +349,80 @@
         // Function to open the modal
         function openModal(target, data) {
             const empId = data.cells[0].textContent
+            const casual_l = data.cells[2].textContent
+            const medical_l = data.cells[3].textContent
+            const maternity_l = data.cells[4].textContent
+            const marriage_l = data.cells[5].textContent
+            const b_casual_l = data.cells[6].textContent
+            const b_medical_l = data.cells[7].textContent
+            const b_maternity_l = data.cells[8].textContent
+            const b_marriage_l = data.cells[9].textContent
+            const attendance = data.cells[10].textContent
+            const total_att = data.cells[11].textContent
             const month = data.cells[12].textContent
             const year = data.cells[13].textContent
 
             const requestData = {
                 empId: empId,
+                casual_l: casual_l,
+                medical_l: medical_l,
+                maternity_l: maternity_l,
+                marriage_l: marriage_l,
+                b_casual_l: b_casual_l,
+                b_medical_l: b_medical_l,
+                b_maternity_l: b_maternity_l,
+                b_marriage_l: b_marriage_l,
+                attendance: attendance,
+                total_att: total_att,
                 month: month,
                 year: year
             }
-
-            const result = getPayCheck(requestData)
-
             const modal = document.querySelector(target);
-            console.log(modal)
+            getPayCheck(requestData, modal)
+            
+
             if (modal) {
-                console.log('enter')
                 modal.classList.add('active')
                 overlay.classList.add('active')
         
             }
         }
 
-        function getPayCheck(data){
+
+
+        function getPayCheck(checkdata, modal){
             fetch('/getPayCheck', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                     // Add any other headers as needed
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(checkdata)
             })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json()// Request was successful, you can handle the response here
-                    } else {
-                        // Request failed, handle the error
-                        console.error('Error:', response.status, response.statusText);
-                    }
-                })
-                .catch(error => {
-                    // Handle network errors
-                    console.error('Network error:', error);
-                });
+            .then((response) => response.json())
+            .then(data => {
+                if (data.message) {
+                    // Show an alert with the message from the server
+                    console.log("paid")
+                    alert(data.message);
+                    location.reload()
+                  } else {
+                    const fields = ['employee_id', 'employee_name', 'position', 'department_name', 'basic_salary', 'leave',  'deduction', 'tax', 'total', 'month', 'year']
+
+
+                    fields.forEach(fieldName => {
+                        const inputField = modal.querySelector(`#${fieldName}`)
+                    if (inputField){
+                        inputField.textContent = data.data[fieldName]
+                    } 
+                    })
+                  }
+                
+            })
+            .catch(error => {
+                console.error(error);
+                // Handle errors, display an error message, or take appropriate action
+            });
         }        
 
 
@@ -323,6 +433,34 @@
             overlay.classList.remove('active')
         }
 
+
+        function searchData() {
+            // Get the input element
+            const input = document.getElementById('nameSearch');
+            // Get the filter value (name to search for)
+            const filter = input.value.toLowerCase();
+        
+            // Get the table and table rows
+            const table = document.getElementById('attendance');
+            const rows = table.getElementsByTagName('tr');
+        
+            // Loop through the table rows
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const nameColumn = row.getElementsByTagName('td')[1]; // Assuming name is in the second column (index 1)
+        
+                if (nameColumn) {
+                    const name = nameColumn.textContent.toLowerCase();
+                    if (name.includes(filter)) {
+                        // Show the row if it matches the search filter
+                        row.style.display = '';
+                    } else {
+                        // Hide the row if it doesn't match
+                        row.style.display = 'none';
+                    }
+                }
+            }
+        }
         
 
     </script>

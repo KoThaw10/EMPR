@@ -32,24 +32,132 @@
                     </div>
                 </div>
                 <div class="table-wrapper">
-                    <table class="table" id="attendance" style="font-size: small;">
+                    <div class="search-options">
+                        <!-- Monthly and Annual search dropdowns -->
+                        <select id="monthSelector" class="month">
+                            <option value="">Select Month</option>
+                            <option value="Jan">January</option>
+                            <option value="Feb">February</option>
+                            <option value="Mar">March</option>
+                            <option value="Apr">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="Jul">July</option>
+                            <option value="Aug">August</option>
+                            <option value="Sep">September</option>
+                            <option value="Oct">October</option>
+                            <option value="Nov">November</option>
+                            <option value="Dec">December</option>
+                        </select>
+
+                        <select id="yearSelector" class="year">
+                            <option value="">Select Year</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <!-- Add more years as needed -->
+                        </select>
+
+                        <!-- Combined search button -->
+                        <button class="searchButton" onclick="searchDataMothYear()">Search</button>
+                    </div>
+                    <table class="table" id="salary" style="font-size: small;">
                         <thead>
                             <tr>
                                 <th>Salary ID</th>
                                 <th>Employee ID</th>
+                                <th>Employee Name</th>
                                 <th>Basic Salary</th>
-                                <th>Total Salary</th>
                                 <th>Tax</th>
+                                <th>Total Salary</th>
+                                <th>Month</th>
+                                <th>Year</th>
                             </tr>
-                            </tr>
+                            
                         </thead>
                         <tbody>
+                            <% SalaryData.forEach(sal => { %>
+                                <tr>
+                                  <td><%= sal.salary_id %></td>
+                                  <td><%= sal.employee_id %></td>
+                                  <td><%= sal.employee_name %></td>
+                                  <td><%= sal.basic_salary %></td>
+                                  <td><%= sal.tax %></td>
+                                  <td><%= sal.total_salary %></td>
+                                  <td><%= sal.month%></td>
+                                  <td><%= sal.year %></td>
+                            </tr>
+                            <% }) %>
                         </tbody>
                     </table>
                 </div>
             </div>
         </main>
     </section>
+
+    <script>
+
+        function searchDataMothYear() {
+            // Get selected month and year values
+            const selectedMonth = document.getElementById('monthSelector').value;
+            const selectedYear = document.getElementById('yearSelector').value;
+            
+            if (selectedMonth && selectedYear) {
+                const dataD = {
+                    month: selectedMonth,
+                    year: parseInt(selectedYear)
+                };
+        
+                // Make a POST request to the server
+                fetch('/getSalaryMonthYear', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataD)
+                })
+                    .then(response => {
+                        return response.json(); // Parse the response as JSON
+                    })
+                    .then(data => {
+                        showData(data);
+                        // You can update the page with the fetched data here
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+                
+            } else {
+                // Handle the case where a month and year are not selected
+                alert('Please select a month and a year.');
+            }
+        }
+
+
+        function showData(data){
+            console.log(data)
+            const salaryTable = document.getElementById("salary")
+            // Clear the existing table body.
+            salaryTable.getElementsByTagName("tbody")[0].innerHTML = "";
+
+            console.log("enter showdata function")
+            // Create a new table body and populate it with the data from the Excel file.
+            const tbody = salaryTable.getElementsByTagName("tbody")[0];
+            data.data.forEach(item => {
+                const row = document.createElement("tr");
+                for (const key in item) {
+                    const cell = document.createElement("td");
+                    cell.textContent = item[key];
+                    row.appendChild(cell);
+                }
+                tbody.appendChild(row);
+            });
+        }
+
+
+    </script>
+
+
 </body>
 
 </html>

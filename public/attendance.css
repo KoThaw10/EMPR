@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 * {
 	margin: 0;
@@ -119,6 +118,67 @@ body {
     background-color: #0056b3;
 }
 
+.searchButton{
+    height: 25px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 5px;
+    background-color: var(--blue);
+    margin-top: 25px;
+    color: white;
+}
+
+.searchButton:hover {
+    background-color: #0056b3;
+}
+
+.month{
+    height: 25px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    width: 160px;
+    border-radius: 5px;
+    background-color: var(--blue);
+    margin-top: 25px;
+    color: white;
+}
+.year{
+    height: 25px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    width: 160px;
+    border-radius: 5px;
+    background-color: var(--blue);
+    margin-top: 25px;
+    color: white;
+}
+
+.form-input {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    margin-top: 10px;
+    /* margin-bottom: 10px; */
+}
+.form-input input {
+    background-color: var(--grey);
+    flex-grow: 1;
+    padding: 0 16px;
+    height: 100%;
+    border: none;
+    border-radius: 5px ;
+    outline: none;
+    color: var(--dark);
+    margin-bottom: 10px;
+
+}
+
 table.table tr th,
 table.table tr td {
     border-color: #e9e9e9;
@@ -210,7 +270,7 @@ label {
     font-weight: bold;
     display: block;
 }
-
+/* 
 input[type="text"],
 input[type="date"],
 input[type="tel"],
@@ -220,7 +280,7 @@ input[type="email"] {
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	font-size: 16px;
-	}
+	} */
 #overlay {
     position: fixed;
     opacity: 0;
@@ -237,8 +297,6 @@ input[type="email"] {
     opacity: 1;
     pointer-events: all;
 }
-
-
 
 @media screen and (max-width: 770px) {
     
@@ -259,25 +317,27 @@ input[type="email"] {
     .modal-body{
         width: 300px;
     }
+    
+}
 
-    /* .table th:nth-child(4),
-    .table td:nth-child(4) {
-        display: none;
+@media screen and (max-width: 500px){
+    .month {
+        width: 70%; 
+        margin-top: 10px; 
+        align-items: center;
+
     }
 
-    .table th:nth-child(5),
-    .table td:nth-child(5) {
-        display: none;
+    .year {
+        width: 70%; 
+        margin-top: 10px; 
+        align-items: center;
     }
 
-    .table th:nth-child(6),
-    .table td:nth-child(6) {
-        display: none;
+    .form-input{
+        width: 70%;
+        margin-top: 10px;
     }
-
-    .table th:nth-child(7),
-    .table td:nth-child(7) {
-        display: none;
-    } */
+   
 }
 

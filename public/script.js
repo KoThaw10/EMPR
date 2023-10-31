@@ -79,7 +79,7 @@ document.getElementById('logout').addEventListener('click', function () {
 	var confirmed = window.confirm('Do you want to log out?');
 	if (confirmed) {
 
-		window.location.href = '/';
+		window.location.href = '/logout';
 	}
 });
 
