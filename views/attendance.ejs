@@ -178,6 +178,25 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/attendanceStart') // Replace with the correct URL
+                .then(response => response.json()) // Adjust this based on the response type from your server
+                .then(data => {
+                    console.log('Data received from the server:');
+                    console.log(data);
+                    showData(data); // Update the data container with the received data
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+        
+
+
+
+
+
         let importedData = [];
 
         function importData() {
@@ -201,7 +220,8 @@
             .then(data => {
                 // Handle the data from the server and display
                 
-                showData(data)
+                console.log(data)
+                alert("Attendance file is uploaded successfully!")
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -232,8 +252,7 @@
                         return response.json(); // Parse the response as JSON
                     })
                     .then(data => {
-                        showData(data);
-                        // You can update the page with the fetched data here
+                        showData(data)
                     })
                     .catch(error => {
                         console.error('Fetch error:', error);
@@ -257,26 +276,44 @@
             data.data.forEach(item => {
                 const row = document.createElement("tr");
                 for (const key in item) {
+
                     const cell = document.createElement("td");
-                    cell.textContent = item[key];
-                    row.appendChild(cell);
+
+                    if(key === "payment_status"){
+                        if(item[key] === "Not Paid"){
+                            const payButton = document.createElement("button");
+                            payButton.id = 'payButton';
+                            payButton.dataset.modalTarget = '#modal'; // Set the data-modal-target attribute
+                            payButton.type = 'paybutton'; // Set the type attribute
+                            payButton.className = 'btn btn-info';
+                            payButton.textContent = 'Pay';
+
+                            payButton.addEventListener('click', function () {
+                                const closestRow = this.closest('tr');
+                                openModal(this.dataset.modalTarget, closestRow); // Pass the data to the openModal function
+                                
+                            });
+
+                            cell.appendChild(payButton);
+                            row.appendChild(cell);
+
+                        }else{
+                            const payButton = document.createElement("button");
+                            payButton.textContent = "Paid"
+                            payButton.className = 'btn btn-info';
+                            payButton.disabled = true
+                            payButton.classList.add("disabled-button");
+
+                            cell.appendChild(payButton);
+                            row.appendChild(cell);
+                        }
+                    }else{
+                        cell.textContent = item[key];
+                        row.appendChild(cell);
+                    }
+                    
                 }
-                const payCell = document.createElement("td");
-                        const payButton = document.createElement("button");
-                        payButton.id = 'payButton';
-                        payButton.dataset.modalTarget = '#modal'; // Set the data-modal-target attribute
-                        payButton.type = 'paybutton'; // Set the type attribute
-                        payButton.className = 'btn btn-info';
-                        payButton.textContent = 'Pay';
-
-                        payButton.addEventListener('click', function () {
-                            const closestRow = this.closest('tr');
-                            openModal(this.dataset.modalTarget, closestRow); // Pass the data to the openModal function
-                            
-                        });
-
-                        payCell.appendChild(payButton);
-                        row.appendChild(payCell);
+                        
                 tbody.appendChild(row);
             });
         }

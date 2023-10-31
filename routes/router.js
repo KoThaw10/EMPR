@@ -29,6 +29,7 @@ const currentDate = new Date();
 
 // Get the current month (0-based, so January is 0, February is 1, and so on)
 const currentMonth = currentDate.getMonth();
+const currentYear = currentDate.getFullYear();
 
 // Create an array of month names
 const monthNames = [
@@ -127,8 +128,21 @@ router.get("/employee", async (req, res) => {
 });
 
 router.get("/attendance", async (req, res) => {
-    res.render("attendance");
+    res.render("attendance")
+    
 });
+
+router.get("/attendanceStart", async (req, res) => {
+    const data = await searchAttByDate([month, currentYear]);
+        if (data) {
+            console.log("data is send");
+            console.log(data)
+            res.json({data})
+        } else {
+            console.log("Error");
+            res.status(500).send("Fail in catching");
+        }
+})
 
 router.get("/employees/:name", async (req, res) => {
     const empName = req.params.name;
@@ -198,7 +212,8 @@ router.post("/upload", upload.single("excelFile"), (req, res) => {
 
     const result = insertAttendance(data);
     if (result) {
-        res.status(200).json({ data: data });
+        
+        res.status(200).json({ message: "Attendance successfully uploaded" });
     } else {
         res.status(500).json({ error: "Failed to process data." });
     }

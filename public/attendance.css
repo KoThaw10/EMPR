@@ -134,6 +134,12 @@ body {
     background-color: #0056b3;
 }
 
+.disabled-button {
+    color: white;  /* Text color */
+    background-color: red;  /* Background color */
+    /* Add any other styles you want for the disabled button */
+  }
+
 .month{
     height: 25px;
     font-weight: bold;
